@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "849176536789",
+    "project_id": "skype-b3ab4",
+    "storage_bucket": "skype-b3ab4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849176536789:android:a05a12b7ceee17cde4e45c",
+        "android_client_info": {
+          "package_name": "com.beowulf.skype"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "849176536789-h9vvuj2dkd8t0h3fdfnn5j2gcch9s3e2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.beowulf.skype",
+            "certificate_hash": "d327df3fceb10e1f873dc09bdf983128981eab56"
+          }
+        },
+        {
+          "client_id": "849176536789-g9u93ouqtto2ehnhehrijtetf7aihnu9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzwpFqO5Ah7Vi7Gv7so5QueZzGaoQv88I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "849176536789-g9u93ouqtto2ehnhehrijtetf7aihnu9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

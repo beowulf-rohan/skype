@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:skype/resources/firebase_repository.dart';
-
+import 'package:skype/utils/universal_variable.dart';
+import 'package:shimmer/shimmer.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -11,26 +12,42 @@ class LoginScreen extends StatefulWidget {
 
 class LoginScreenState extends State<LoginScreen> {
   FirebaseRepository _repository = FirebaseRepository();
+  bool isLoginPressed = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: loginButton(),
+      backgroundColor: UniversalVariables.blackColor,
+      body: Stack(
+        children: [
+          Center(
+            child: loginButton(),
+          ),
+          isLoginPressed ? Center(child: CircularProgressIndicator()) : Container(),
+        ],
+      ),
     );
   }
 
   Widget loginButton() {
-    return TextButton(
-      child: Text(
-        "LOGIN",
-        style: TextStyle(
-            fontSize: 35, fontWeight: FontWeight.w900, letterSpacing: 1.2),
+    return Shimmer.fromColors(
+      baseColor: Colors.white,
+      highlightColor: UniversalVariables.senderColor,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Text(
+          "LOGIN",
+          style: TextStyle(fontSize: 35, fontWeight: FontWeight.w900, letterSpacing: 1.2),
+        ),
+        onPressed: () => performLogin(),
       ),
-      onPressed: () => performLogin(),
     );
   }
 
   void performLogin() {
+    setState(() {
+      isLoginPressed = true;
+    });
     _repository.signIn().then((FirebaseUser user) {
       print("something");
       if (user != null) {
@@ -43,18 +60,19 @@ class LoginScreenState extends State<LoginScreen> {
 
   void authenticateUser(FirebaseUser user) {
     _repository.authenticateUser(user).then((isNewUser) {
+      setState(() {
+        isLoginPressed = false;
+      });
       if (isNewUser) {
         _repository.addDataToDb(user).then((value) {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) {
-                return HomeScreen();
-              }));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+            return HomeScreen();
+          }));
         });
       } else {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) {
-              return HomeScreen();
-            }));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+          return HomeScreen();
+        }));
       }
     });
   }

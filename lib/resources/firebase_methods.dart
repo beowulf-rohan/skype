@@ -20,10 +20,8 @@ class FirebaseMethods {
   Future<FirebaseUser> signIn() async {
     GoogleSignInAccount _signInAccount = await _googleSignIn.signIn();
     GoogleSignInAuthentication _signInAuthentication = await _signInAccount.authentication;
-
     final AuthCredential credential = GoogleAuthProvider.getCredential(
         accessToken: _signInAuthentication.accessToken, idToken: _signInAuthentication.idToken);
-
     FirebaseUser user = await _auth.signInWithCredential(credential);
     return user;
   }
@@ -31,22 +29,24 @@ class FirebaseMethods {
   Future<bool> authenticateUser(FirebaseUser user) async {
     QuerySnapshot result =
         await firestore.collection("users").where("email", isEqualTo: user.email).getDocuments();
-
     final List<DocumentSnapshot> docs = result.documents;
-
     return docs.length == 0 ? true : false;
   }
 
   Future<void> addDataToDb(FirebaseUser currentUser) async {
     String username = Utils.getUsername(currentUser.email);
-
     user = User(
         uid: currentUser.uid,
         email: currentUser.email,
         name: currentUser.displayName,
         profilePhoto: currentUser.photoUrl,
         username: username);
-
     firestore.collection("users").document(currentUser.uid).setData(user.toMap(user));
+  }
+
+  Future<void> signOut() async{
+    await _googleSignIn.disconnect();
+    await _googleSignIn.signOut();
+    return await _auth.signOut();
   }
 }

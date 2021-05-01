@@ -17,7 +17,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Skype Clone",
+      title: "Skype ",
       debugShowCheckedModeBanner: false,
       home: FutureBuilder(
         future: _repository.getCurrentUser(),

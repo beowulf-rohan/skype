@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:skype/resources/firebase_repository.dart';
 import 'package:skype/screens/home_screen.dart';
 import 'package:skype/screens/login_screen.dart';
+import 'package:skype/screens/search_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,6 +20,10 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: "Skype ",
       debugShowCheckedModeBanner: false,
+      initialRoute: '/',
+      routes: {
+        '/search_screen': (context) => SearchScreen(),
+      },
       home: FutureBuilder(
         future: _repository.getCurrentUser(),
         builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {

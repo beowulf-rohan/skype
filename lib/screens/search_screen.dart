@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:skype/models/user.dart';
 import 'package:skype/resources/firebase_repository.dart';
+import 'package:skype/screens/chatscreens/chat_screens.dart';
 import 'package:skype/utils/universal_variable.dart';
 
 import '../utils/universal_variable.dart';
@@ -60,7 +61,7 @@ class _SearchScreenState extends State<SearchScreen> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.white,
-              fontSize: 35.0,
+              fontSize: 30.0,
             ),
             decoration: InputDecoration(
               suffixIcon: IconButton(
@@ -74,7 +75,7 @@ class _SearchScreenState extends State<SearchScreen> {
               hintStyle: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Color(0x88ffffff),
-                fontSize: 35.0,
+                fontSize: 30.0,
               ),
             ),
           ),
@@ -106,9 +107,17 @@ class _SearchScreenState extends State<SearchScreen> {
           name: suggestionList[index].name,
           username: suggestionList[index].username,
         );
+
         return CustomTile(
           mini: false,
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChatScreen(receiver: searchedUser),
+              ),
+            );
+          },
           leading: CircleAvatar(
             backgroundImage: NetworkImage(searchedUser.profilePhoto),
             backgroundColor: Colors.grey,
@@ -121,8 +130,8 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
           subtitle: Text(
-          searchedUser.name,
-          style: TextStyle(color: UniversalVariables.greyColor),
+            searchedUser.name,
+            style: TextStyle(color: UniversalVariables.greyColor),
           ),
         );
       }),

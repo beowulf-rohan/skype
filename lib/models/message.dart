@@ -4,7 +4,7 @@ class Message {
   String message;
   String senderId;
   String receiverId;
-  FieldValue timestamp;
+  Timestamp timestamp;
   String messageType;
   String photoUrl;
 
@@ -36,13 +36,11 @@ class Message {
     return mp;
   }
 
-  Message fromMap(Map<String, dynamic> mp) {
-    Message _message = Message();
-    _message.message = mp['message'];
-    _message.senderId = mp['senderId'];
-    _message.receiverId = mp['receiverId'];
-    _message.timestamp = mp['timestamp'];
-    _message.messageType = mp['messageType'];
-    return _message;
+  Message.fromMap(Map<String, dynamic> mp) {
+    this.message = mp['message'];
+    this.senderId = mp['senderId'];
+    this.receiverId = mp['receiverId'];
+    this.timestamp = mp['timestamp'];
+    this.messageType = mp['messageType'];
   }
 }

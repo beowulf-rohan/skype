@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:skype/Constants/strings.dart';
 import 'package:skype/models/message.dart';
 import 'package:skype/models/user.dart';
 import 'package:skype/utils/utilities.dart';
@@ -29,7 +30,7 @@ class FirebaseMethods {
 
   Future<bool> authenticateUser(FirebaseUser user) async {
     QuerySnapshot result =
-        await firestore.collection("users").where("email", isEqualTo: user.email).getDocuments();
+        await firestore.collection(USERS_COLLECTION).where(EMAIL_FIELD, isEqualTo: user.email).getDocuments();
     final List<DocumentSnapshot> docs = result.documents;
     return docs.length == 0 ? true : false;
   }
@@ -42,7 +43,7 @@ class FirebaseMethods {
         name: currentUser.displayName,
         profilePhoto: currentUser.photoUrl,
         username: username);
-    firestore.collection("users").document(currentUser.uid).setData(user.toMap(user));
+    firestore.collection(USERS_COLLECTION).document(currentUser.uid).setData(user.toMap(user));
   }
 
   Future<void> signOut() async{
@@ -53,7 +54,7 @@ class FirebaseMethods {
 
   Future<List<User>> fetchAllUsers(FirebaseUser user) async{
     List<User> userList = [];
-    QuerySnapshot querySnapshot = await firestore.collection("users").getDocuments();
+    QuerySnapshot querySnapshot = await firestore.collection(USERS_COLLECTION).getDocuments();
     for(var i = 0; i < querySnapshot.documents.length; i++) {
       if(querySnapshot.documents[i].documentID != user.uid)
         userList.add(User.fromMap(querySnapshot.documents[i].data));
@@ -63,7 +64,7 @@ class FirebaseMethods {
 
   Future<void> addMessageToDb(Message message, User sender, User receiver) async{
     var mp = message.toMap();
-    await firestore.collection("messages").document(message.senderId).collection(message.receiverId).add(mp);
-    return await firestore.collection("messages").document(message.receiverId).collection(message.senderId).add(mp);
+    await firestore.collection(MESSAGES_COLLECTION).document(message.senderId).collection(message.receiverId).add(mp);
+    return await firestore.collection(MESSAGES_COLLECTION).document(message.receiverId).collection(message.senderId).add(mp);
   }
 }

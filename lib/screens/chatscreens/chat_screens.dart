@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:skype/Constants/strings.dart';
 import 'package:skype/models/message.dart';
 import 'package:skype/models/user.dart';
 import 'package:skype/utils/universal_variable.dart';
@@ -56,10 +57,10 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget messageList() {
     return StreamBuilder(
         stream: Firestore.instance
-            .collection("messages")
+            .collection(MESSAGES_COLLECTION)
             .document(_currentUserId)
             .collection(widget.receiver.uid)
-            .orderBy("timestamp", descending: true)
+            .orderBy(TIMESTAMP_FIELD, descending: true)
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.data == null) return Center(child: CircularProgressIndicator());
@@ -73,7 +74,7 @@ class _ChatScreenState extends State<ChatScreen> {
         });
   }
 
-  Widget senderLayout(DocumentSnapshot snapshot) {
+  Widget senderLayout(Message message) {
     Radius messageRadius = Radius.circular(10);
 
     return Container(
@@ -92,23 +93,13 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         child: Padding(
           padding: EdgeInsets.all(10),
-          child: getMessage(snapshot)
+          child: getMessage(message)
         ),
       ),
     );
   }
 
-  getMessage(DocumentSnapshot snapshot) {
-    return Text(
-      snapshot["message"],
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 16.0,
-      ),
-    );
-  }
-
-  Widget receiverLayout(DocumentSnapshot snapshot) {
+  Widget receiverLayout(Message message) {
     Radius messageRadius = Radius.circular(10.0);
     return Container(
       alignment: Alignment.centerLeft,
@@ -125,23 +116,35 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         child: Padding(
           padding: EdgeInsets.all(10.0),
-          child: getMessage(snapshot)
+          child: getMessage(message)
         ),
       ),
     );
   }
 
+  getMessage(Message message) {
+    return Text(
+      message.message,
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 16.0,
+      ),
+    );
+  }
+
   Widget chatMessageItem(DocumentSnapshot snapshot) {
+    Message _message = Message.fromMap(snapshot.data);
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: 15.0),
       child: Container(
           child: Container(
-        alignment: snapshot['senderId'] == _currentUserId
+        alignment: _message.senderId == _currentUserId
             ? Alignment.centerRight
             : Alignment.centerLeft,
-            child: snapshot['senderId'] == _currentUserId
-                ? senderLayout(snapshot)
-                : receiverLayout(snapshot),
+            child: _message.senderId == _currentUserId
+                ? senderLayout(_message)
+                : receiverLayout(_message),
       )),
     );
   }
@@ -300,14 +303,14 @@ class _ChatScreenState extends State<ChatScreen> {
       message: text,
       senderId: sender.uid,
       receiverId: widget.receiver.uid,
-      timestamp: FieldValue.serverTimestamp(),
+      timestamp: Timestamp.now(),
       messageType: 'text',
     );
 
     setState(() {
       isWriting = false;
     });
-
+    textFieldController.text = "";
     _repository.addMessageToDb(_message, sender, widget.receiver);
   }
 

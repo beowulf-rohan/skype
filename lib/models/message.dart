@@ -36,6 +36,17 @@ class Message {
     return mp;
   }
 
+  Map toImageMap() {
+    var mp = Map<String, dynamic>();
+    mp['message'] = this.message;
+    mp['photoUrl'] = this.photoUrl;
+    mp['senderId'] = this.senderId;
+    mp['receiverId'] = this.receiverId;
+    mp['timestamp'] = this.timestamp;
+    mp['messageType'] = this.messageType;
+    return mp;
+  }
+
   Message.fromMap(Map<String, dynamic> mp) {
     this.message = mp['message'];
     this.senderId = mp['senderId'];

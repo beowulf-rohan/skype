@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:skype/models/message.dart';
 import 'package:skype/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,4 +16,9 @@ class FirebaseRepository {
   Future<List<User>> fetchAllUsers(FirebaseUser user) => _firebaseMethods.fetchAllUsers(user);
   Future<void> addMessageToDb(Message message, User sender, User receiver) =>
       _firebaseMethods.addMessageToDb(message, sender, receiver);
+  void uploadImage({
+    @required File image,
+    @required String senderId,
+    @required String receiverId,
+  }) => _firebaseMethods.uploadImage(image, senderId, receiverId);
 }

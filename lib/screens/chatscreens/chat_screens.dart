@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:skype/Constants/strings.dart';
 import 'package:skype/models/message.dart';
 import 'package:skype/models/user.dart';
 import 'package:skype/utils/universal_variable.dart';
+import 'package:skype/utils/utilities.dart';
 import 'package:skype/widgets/appbar.dart';
 import 'package:skype/widgets/customTile.dart';
 import 'package:skype/resources/firebase_repository.dart';
@@ -337,6 +341,15 @@ class _ChatScreenState extends State<ChatScreen> {
           });
     }
 
+    pickImage({@required ImageSource source}) async {
+      File selectedImage = await Utils.pickImage(source: source);
+      _repository.uploadImage(
+        image: selectedImage,
+        senderId: _currentUserId,
+        receiverId: widget.receiver.uid,
+      );
+    }
+
     return Container(
       padding: EdgeInsets.all(10.0),
       child: Row(
@@ -400,9 +413,14 @@ class _ChatScreenState extends State<ChatScreen> {
               ? Container()
               : Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Icon(Icons.record_voice_over),
+                  child: Icon(Icons.mic),
                 ),
-          isWriting ? Container() : Icon(Icons.camera_alt),
+          isWriting
+              ? Container()
+              : GestureDetector(
+                  child: Icon(Icons.camera_alt),
+                  onTap: () => pickImage(source: ImageSource.camera),
+                ),
           isWriting
               ? Container(
                   margin: EdgeInsets.only(left: 10.0),

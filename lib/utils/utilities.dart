@@ -24,5 +24,15 @@ class Utils {
     );
     File selectedImage = File(file.path);
     return selectedImage;
+    //Use this if error pops up again.....
+    /*final ImagePicker _picker = ImagePicker();
+    PickedFile pickedImage = await _picker.getImage(
+      source: source,
+      maxWidth: 500,
+      maxHeight: 500,
+      imageQuality: 85,
+    );
+    File selectedImage = File(pickedImage.path);
+    return selectedImage;*/
   }
 }

@@ -1,15 +1,18 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:skype/Constants/strings.dart';
+import 'package:skype/enum/view_state.dart';
 import 'package:skype/models/message.dart';
 import 'package:skype/models/user.dart';
+import 'package:skype/provider/image_upload_provider.dart';
 import 'package:skype/utils/universal_variable.dart';
 import 'package:skype/utils/utilities.dart';
 import 'package:skype/widgets/appbar.dart';
+import 'package:skype/widgets/cached_image.dart';
 import 'package:skype/widgets/customTile.dart';
 import 'package:skype/resources/firebase_repository.dart';
 
@@ -26,6 +29,7 @@ class _ChatScreenState extends State<ChatScreen> {
   ScrollController _listScrollController = ScrollController();
   FirebaseRepository _repository = FirebaseRepository();
   FocusNode textFieldFocus = FocusNode();
+  ImageUploadProvider _imageUploadProvider;
   User sender;
   bool isWriting = false;
   bool showEmojiPicker = false;
@@ -64,6 +68,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _imageUploadProvider = Provider.of<ImageUploadProvider>(context);
     return Scaffold(
       backgroundColor: UniversalVariables.blackColor,
       appBar: customAppBar(context),
@@ -72,6 +77,13 @@ class _ChatScreenState extends State<ChatScreen> {
           Flexible(
             child: messageList(),
           ),
+          _imageUploadProvider.getViewState == ViewState.LOADING
+              ? Container(
+                  margin: EdgeInsets.only(right: 15.0),
+                  alignment: Alignment.centerRight,
+                  child: CircularProgressIndicator(),
+                )
+              : Container(),
           chatControls(),
           showEmojiPicker ? Container(child: emojiContainer()) : Container(),
         ],
@@ -175,7 +187,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
           // whenever there is a change in the  UI we
           // scroll to bottom of the screen....
-
           // SchedulerBinding.instance.addPostFrameCallback((_) {
           //   _listScrollController.animateTo(
           //     _listScrollController.position.minScrollExtent,
@@ -239,13 +250,15 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   getMessage(Message message) {
-    return Text(
-      message.message,
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 16.0,
-      ),
-    );
+    return message.messageType != MESSAGE_TYPE_IMAGE
+        ? Text(
+            message.message,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0,
+            ),
+          )
+        : message.photoUrl != null ? CachedImage(url: message.photoUrl) : Text("Invalid URL");
   }
 
   Widget chatMessageItem(DocumentSnapshot snapshot) {
@@ -254,10 +267,11 @@ class _ChatScreenState extends State<ChatScreen> {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 15.0),
       child: Container(
-          child: Container(
-        alignment: _message.senderId == _currentUserId ? Alignment.centerRight : Alignment.centerLeft,
-        child: _message.senderId == _currentUserId ? senderLayout(_message) : receiverLayout(_message),
-      )),
+        child: Container(
+          alignment: _message.senderId == _currentUserId ? Alignment.centerRight : Alignment.centerLeft,
+          child: _message.senderId == _currentUserId ? senderLayout(_message) : receiverLayout(_message),
+        ),
+      ),
     );
   }
 
@@ -266,6 +280,16 @@ class _ChatScreenState extends State<ChatScreen> {
       setState(() {
         isWriting = value;
       });
+    }
+
+    pickImage({@required ImageSource source}) async {
+      File selectedImage = await Utils.pickImage(source: source);
+      _repository.uploadImage(
+        image: selectedImage,
+        senderId: _currentUserId,
+        receiverId: widget.receiver.uid,
+        imageUploadProvider: _imageUploadProvider,
+      );
     }
 
     addMediaModal(context) {
@@ -307,6 +331,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         title: "Media",
                         subTitle: "Share Photos and Videos",
                         icon: Icons.image_rounded,
+                        onTap: () => pickImage(source: ImageSource.gallery)
                       ),
                       ModalTile(
                         title: "File",
@@ -339,15 +364,6 @@ class _ChatScreenState extends State<ChatScreen> {
               ],
             );
           });
-    }
-
-    pickImage({@required ImageSource source}) async {
-      File selectedImage = await Utils.pickImage(source: source);
-      _repository.uploadImage(
-        image: selectedImage,
-        senderId: _currentUserId,
-        receiverId: widget.receiver.uid,
-      );
     }
 
     return Container(
@@ -489,11 +505,13 @@ class ModalTile extends StatelessWidget {
   final String title;
   final String subTitle;
   final IconData icon;
+  final Function onTap;
 
   ModalTile({
     @required this.title,
     @required this.subTitle,
     @required this.icon,
+    this.onTap,
   });
 
   @override
@@ -501,6 +519,7 @@ class ModalTile extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15.0),
       child: CustomTile(
+        onTap: onTap,
         mini: false,
         leading: Container(
           margin: EdgeInsets.only(right: 10.0),

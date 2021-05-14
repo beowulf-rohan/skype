@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:skype/models/message.dart';
 import 'package:skype/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:skype/provider/image_upload_provider.dart';
 import 'package:skype/resources/firebase_methods.dart';
 
 class FirebaseRepository {
@@ -20,5 +21,6 @@ class FirebaseRepository {
     @required File image,
     @required String senderId,
     @required String receiverId,
-  }) => _firebaseMethods.uploadImage(image, senderId, receiverId);
+    @required ImageUploadProvider imageUploadProvider,
+  }) => _firebaseMethods.uploadImage(image, senderId, receiverId, imageUploadProvider);
 }

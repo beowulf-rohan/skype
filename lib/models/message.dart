@@ -53,5 +53,6 @@ class Message {
     this.receiverId = mp['receiverId'];
     this.timestamp = mp['timestamp'];
     this.messageType = mp['messageType'];
+    this.photoUrl = mp['photoUrl'];
   }
 }

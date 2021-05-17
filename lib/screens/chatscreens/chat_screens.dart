@@ -9,6 +9,7 @@ import 'package:skype/enum/view_state.dart';
 import 'package:skype/models/message.dart';
 import 'package:skype/models/user.dart';
 import 'package:skype/provider/image_upload_provider.dart';
+import 'package:skype/utils/call_utilities.dart';
 import 'package:skype/utils/universal_variable.dart';
 import 'package:skype/utils/utilities.dart';
 import 'package:skype/widgets/appbar.dart';
@@ -481,7 +482,13 @@ class _ChatScreenState extends State<ChatScreen> {
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.video_call),
-          onPressed: () {},
+          onPressed: () {
+            CallUtils.dial(
+              from: sender,
+              to: widget.receiver,
+              context: context
+            );
+          },
         ),
         IconButton(
           icon: Icon(Icons.phone),

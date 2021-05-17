@@ -15,6 +15,7 @@ class FirebaseMethods {
   StorageReference _storageReference;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   static final Firestore firestore = Firestore.instance;
+  static final CollectionReference _userCollection = firestore.collection(USERS_COLLECTION);
 
   Future<FirebaseUser> getCurrentUser() async {
     FirebaseUser currentUser;
@@ -36,6 +37,12 @@ class FirebaseMethods {
         await firestore.collection(USERS_COLLECTION).where(EMAIL_FIELD, isEqualTo: user.email).getDocuments();
     final List<DocumentSnapshot> docs = result.documents;
     return docs.length == 0 ? true : false;
+  }
+
+  Future<User> getUserDetails() async{
+    FirebaseUser currUser = await getCurrentUser();
+    DocumentSnapshot documentSnapshot = await _userCollection.document(currUser.uid).get();
+    return User.fromMap(documentSnapshot.data);
   }
 
   Future<void> addDataToDb(FirebaseUser currentUser) async {

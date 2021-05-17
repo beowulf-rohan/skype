@@ -10,6 +10,7 @@ import 'package:skype/resources/firebase_methods.dart';
 class FirebaseRepository {
   FirebaseMethods _firebaseMethods = FirebaseMethods();
   Future<FirebaseUser> getCurrentUser() => _firebaseMethods.getCurrentUser();
+  Future<User> getUserDetails() => _firebaseMethods.getUserDetails();
   Future<FirebaseUser> signIn() => _firebaseMethods.signIn();
   Future<bool> authenticateUser(FirebaseUser user) => _firebaseMethods.authenticateUser(user);
   Future<void> addDataToDb(FirebaseUser user) => _firebaseMethods.addDataToDb(user);

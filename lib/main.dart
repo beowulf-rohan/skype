@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skype/provider/image_upload_provider.dart';
+import 'package:skype/provider/user_provider.dart';
 import 'package:skype/resources/firebase_repository.dart';
 import 'package:skype/screens/home_screen.dart';
 import 'package:skype/screens/login_screen.dart';
@@ -19,8 +20,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ImageUploadProvider>(
-      create: (context) => ImageUploadProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ImageUploadProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+      ],
       child: MaterialApp(
         title: "Skype ",
         debugShowCheckedModeBanner: false,

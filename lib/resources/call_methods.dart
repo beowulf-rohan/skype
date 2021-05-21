@@ -23,7 +23,7 @@ class CallMethods {
     }
   }
 
-  Future<bool> endCall(Call call) async{
+  Future<bool> endCall({Call call}) async{
     try{
       await callCollection.document(call.callerId).delete();
       await callCollection.document(call.receiverId).delete();

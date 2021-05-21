@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:skype/models/call.dart';
 import 'package:skype/resources/call_methods.dart';
 import 'package:skype/screens/callscreens/call_screen.dart';
+import 'package:skype/utils/permissions.dart';
+import 'package:skype/widgets/cached_image.dart';
 
 class PickUpScreen extends StatelessWidget {
   final Call call;
@@ -24,10 +26,10 @@ class PickUpScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 50.0),
-            Image.network(
+            CachedImage(
               call.callerPic,
-              height: 150.0,
-              width: 150.0,
+              isRound: true,
+              radius: 180.0,
             ),
             SizedBox(height: 15.0),
             Text(
@@ -45,19 +47,21 @@ class PickUpScreen extends StatelessWidget {
                   icon: Icon(Icons.call_end),
                   color: Colors.redAccent,
                   onPressed: () async {
-                    await callMethods.endCall(call);
+                    await callMethods.endCall(call: call);
                   },
                 ),
                 SizedBox(width: 25.0),
                 IconButton(
                   icon: Icon(Icons.call),
                   color: Colors.green,
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CallScreen(call: call),
-                    ),
-                  ),
+                  onPressed: () async => await Permissions.cameraAndMicrophonePermissionsGranted()
+                      ? Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CallScreen(call: call),
+                          ),
+                        )
+                      : {},
                 ),
               ],
             ),

@@ -10,6 +10,7 @@ import 'package:skype/models/message.dart';
 import 'package:skype/models/user.dart';
 import 'package:skype/provider/image_upload_provider.dart';
 import 'package:skype/utils/call_utilities.dart';
+import 'package:skype/utils/permissions.dart';
 import 'package:skype/utils/universal_variable.dart';
 import 'package:skype/utils/utilities.dart';
 import 'package:skype/widgets/appbar.dart';
@@ -225,7 +226,10 @@ class _ChatScreenState extends State<ChatScreen> {
             bottomLeft: messageRadius,
           ),
         ),
-        child: Padding(padding: EdgeInsets.all(10), child: getMessage(message)),
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: getMessage(message),
+        ),
       ),
     );
   }
@@ -259,7 +263,14 @@ class _ChatScreenState extends State<ChatScreen> {
               fontSize: 16.0,
             ),
           )
-        : message.photoUrl != null ? CachedImage(url: message.photoUrl) : Text("Invalid URL");
+        : message.photoUrl != null
+            ? CachedImage(
+                message.photoUrl,
+                height: 250.0,
+                width: 250.0,
+                radius: 10.0,
+              )
+            : Text("Invalid URL");
   }
 
   Widget chatMessageItem(DocumentSnapshot snapshot) {
@@ -329,11 +340,10 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: ListView(
                     children: <Widget>[
                       ModalTile(
-                        title: "Media",
-                        subTitle: "Share Photos and Videos",
-                        icon: Icons.image_rounded,
-                        onTap: () => pickImage(source: ImageSource.gallery)
-                      ),
+                          title: "Media",
+                          subTitle: "Share Photos and Videos",
+                          icon: Icons.image_rounded,
+                          onTap: () => pickImage(source: ImageSource.gallery)),
                       ModalTile(
                         title: "File",
                         subTitle: "Share Files",
@@ -482,13 +492,13 @@ class _ChatScreenState extends State<ChatScreen> {
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.video_call),
-          onPressed: () {
-            CallUtils.dial(
-              from: sender,
-              to: widget.receiver,
-              context: context
-            );
-          },
+          onPressed: () async => await Permissions.cameraAndMicrophonePermissionsGranted()
+              ? CallUtils.dial(
+                  from: sender,
+                  to: widget.receiver,
+                  context: context,
+                )
+              : {},
         ),
         IconButton(
           icon: Icon(Icons.phone),

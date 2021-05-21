@@ -1,5 +1,10 @@
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 import 'package:skype/models/call.dart';
+import 'package:skype/provider/user_provider.dart';
 import 'package:skype/resources/call_methods.dart';
 
 class CallScreen extends StatefulWidget {
@@ -12,7 +17,41 @@ class CallScreen extends StatefulWidget {
 }
 
 class _CallScreenState extends State<CallScreen> {
-  static final CallMethods callMethods = CallMethods();
+  final CallMethods callMethods = CallMethods();
+  UserProvider userProvider;
+  StreamSubscription callStreamSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    addPostFrameCallBack();
+  }
+
+  addPostFrameCallBack() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      userProvider = Provider.of<UserProvider>(context, listen: false);
+      callStreamSubscription = callMethods
+          .callStream(uid: userProvider.getUser.uid)
+          .listen((DocumentSnapshot snapshot) {
+        switch(snapshot.data)
+        {
+          //snapshot is null... call is hanged... docs deleted...
+          case null:
+            Navigator.pop(context);
+            break;
+          default:
+            break;
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    callStreamSubscription.cancel();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

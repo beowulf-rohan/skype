@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:skype/models/call.dart';
 import 'package:skype/resources/call_methods.dart';
 import 'package:skype/screens/callscreens/call_screen.dart';
+import 'package:skype/widgets/cached_image.dart';
 
 class PickUpScreen extends StatelessWidget {
   final Call call;
@@ -24,10 +25,10 @@ class PickUpScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 50.0),
-            Image.network(
+            CachedImage(
               call.callerPic,
-              height: 150.0,
-              width: 150.0,
+              isRound: true,
+              radius: 180.0,
             ),
             SizedBox(height: 15.0),
             Text(

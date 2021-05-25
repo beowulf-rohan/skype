@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:skype/models/user.dart';
 import 'package:skype/resources/firebase_repository.dart';
+import 'package:skype/screens/callscreens/pickup/pickup_layout.dart';
 import 'package:skype/screens/chatscreens/chat_screens.dart';
 import 'package:skype/utils/universal_variable.dart';
 
@@ -140,12 +141,14 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: UniversalVariables.blackColor,
-      appBar: searchAppBar(context),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
-        child: buildSuggestions(query),
+    return PickupLayout(
+      scaffold: Scaffold(
+        backgroundColor: UniversalVariables.blackColor,
+        appBar: searchAppBar(context),
+        body: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          child: buildSuggestions(query),
+        ),
       ),
     );
   }

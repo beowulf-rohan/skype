@@ -9,6 +9,7 @@ import 'package:skype/enum/view_state.dart';
 import 'package:skype/models/message.dart';
 import 'package:skype/models/user.dart';
 import 'package:skype/provider/image_upload_provider.dart';
+import 'package:skype/screens/callscreens/pickup/pickup_layout.dart';
 import 'package:skype/utils/call_utilities.dart';
 import 'package:skype/utils/permissions.dart';
 import 'package:skype/utils/universal_variable.dart';
@@ -71,24 +72,26 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     _imageUploadProvider = Provider.of<ImageUploadProvider>(context);
-    return Scaffold(
-      backgroundColor: UniversalVariables.blackColor,
-      appBar: customAppBar(context),
-      body: Column(
-        children: <Widget>[
-          Flexible(
-            child: messageList(),
-          ),
-          _imageUploadProvider.getViewState == ViewState.LOADING
-              ? Container(
-                  margin: EdgeInsets.only(right: 15.0),
-                  alignment: Alignment.centerRight,
-                  child: CircularProgressIndicator(),
-                )
-              : Container(),
-          chatControls(),
-          showEmojiPicker ? Container(child: emojiContainer()) : Container(),
-        ],
+    return PickupLayout(
+      scaffold: Scaffold(
+        backgroundColor: UniversalVariables.blackColor,
+        appBar: customAppBar(context),
+        body: Column(
+          children: <Widget>[
+            Flexible(
+              child: messageList(),
+            ),
+            _imageUploadProvider.getViewState == ViewState.LOADING
+                ? Container(
+                    margin: EdgeInsets.only(right: 15.0),
+                    alignment: Alignment.centerRight,
+                    child: CircularProgressIndicator(),
+                  )
+                : Container(),
+            chatControls(),
+            showEmojiPicker ? Container(child: emojiContainer()) : Container(),
+          ],
+        ),
       ),
     );
   }

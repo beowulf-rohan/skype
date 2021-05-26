@@ -17,7 +17,9 @@ import 'package:skype/utils/utilities.dart';
 import 'package:skype/widgets/appbar.dart';
 import 'package:skype/widgets/cached_image.dart';
 import 'package:skype/widgets/customTile.dart';
-import 'package:skype/resources/firebase_repository.dart';
+import 'package:skype/resources/auth_methods.dart';
+import 'package:skype/resources/chat_methods.dart';
+import 'package:skype/resources/storage_methods.dart';
 
 class ChatScreen extends StatefulWidget {
   final User receiver;
@@ -30,7 +32,9 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   TextEditingController textFieldController = TextEditingController();
   ScrollController _listScrollController = ScrollController();
-  FirebaseRepository _repository = FirebaseRepository();
+  final StorageMethods _storageMethods = StorageMethods();
+  final ChatMethods _chatMethods = ChatMethods();
+  final AuthMethods _authMethods = AuthMethods();
   FocusNode textFieldFocus = FocusNode();
   ImageUploadProvider _imageUploadProvider;
   User sender;
@@ -41,7 +45,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    _repository.getCurrentUser().then((user) {
+    _authMethods.getCurrentUser().then((user) {
       _currentUserId = user.uid;
       setState(() {
         sender = User(
@@ -299,7 +303,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     pickImage({@required ImageSource source}) async {
       File selectedImage = await Utils.pickImage(source: source);
-      _repository.uploadImage(
+      _storageMethods.uploadImage(
         image: selectedImage,
         senderId: _currentUserId,
         receiverId: widget.receiver.uid,
@@ -486,7 +490,7 @@ class _ChatScreenState extends State<ChatScreen> {
       isWriting = false;
     });
     textFieldController.text = "";
-    _repository.addMessageToDb(_message, sender, widget.receiver);
+    _chatMethods.addMessageToDb(_message, sender, widget.receiver);
   }
 
   CustomAppBar customAppBar(context) {

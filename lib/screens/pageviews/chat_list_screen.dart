@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:skype/resources/firebase_repository.dart';
+import 'package:skype/resources/auth_methods.dart';
+import 'package:skype/screens/callscreens/pickup/pickup_layout.dart';
 import 'package:skype/utils/universal_variable.dart';
 import 'package:skype/utils/utilities.dart';
 import 'package:skype/widgets/appbar.dart';
@@ -10,16 +11,16 @@ class ChatListScreen extends StatefulWidget {
   _ChatListScreenState createState() => _ChatListScreenState();
 }
 
-final FirebaseRepository _repository = FirebaseRepository();
 
 class _ChatListScreenState extends State<ChatListScreen> {
   String currentUserId;
   String initials;
+  final AuthMethods _authMethods = AuthMethods();
 
   @override
   void initState() {
     super.initState();
-    _repository.getCurrentUser().then((user) {
+    _authMethods.getCurrentUser().then((user) {
       setState(() {
         currentUserId = user.uid;
         initials = Utils.getInitials(user.displayName);
@@ -61,11 +62,13 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: UniversalVariables.blackColor,
-      appBar: customAppBar(context),
-      floatingActionButton: NewChatButton(),
-      body: ChatListContainer(currentUserId),
+    return PickupLayout(
+      scaffold: Scaffold(
+        backgroundColor: UniversalVariables.blackColor,
+        appBar: customAppBar(context),
+        floatingActionButton: NewChatButton(),
+        body: ChatListContainer(currentUserId),
+      ),
     );
   }
 }

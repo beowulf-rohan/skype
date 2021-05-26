@@ -2,13 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:skype/models/user.dart';
-import 'package:skype/resources/firebase_repository.dart';
+import 'package:skype/resources/auth_methods.dart';
 import 'package:skype/screens/callscreens/pickup/pickup_layout.dart';
 import 'package:skype/screens/chatscreens/chat_screens.dart';
 import 'package:skype/utils/universal_variable.dart';
-
-import '../utils/universal_variable.dart';
-import '../widgets/customTile.dart';
+import 'package:skype/widgets/customTile.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -16,7 +14,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  FirebaseRepository _repository = FirebaseRepository();
+  final AuthMethods _authMethods = AuthMethods();
   List<User> userList;
   String query = "";
   TextEditingController searchController = TextEditingController();
@@ -24,8 +22,8 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    _repository.getCurrentUser().then((FirebaseUser user) {
-      _repository.fetchAllUsers(user).then((List<User> list) {
+    _authMethods.getCurrentUser().then((FirebaseUser user) {
+      _authMethods.fetchAllUsers(user).then((List<User> list) {
         setState(() {
           userList = list;
         });

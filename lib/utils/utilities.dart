@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:skype/enum/user_state.dart';
 // import 'package:image/image.dart' as Im;
 
 class Utils {
@@ -35,4 +36,26 @@ class Utils {
     File selectedImage = File(pickedImage.path);
     return selectedImage;*/
   }
+  static int stateToNum(UserState userstate) {
+    switch(userstate) {
+      case UserState.Offline:
+        return 0;
+      case UserState.Online:
+        return 1;
+      default:
+        return 2;
+    }
+  }
+
+  static UserState numToState(int num) {
+    switch(num) {
+      case 0:
+        return UserState.Offline;
+      case 1:
+        return UserState.Online;
+      default:
+        return UserState.Waiting;
+    }
+  }
+
 }

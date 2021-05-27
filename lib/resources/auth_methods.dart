@@ -1,7 +1,8 @@
-//import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:skype/constants/strings.dart';
+import 'package:skype/enum/user_state.dart';
 import 'package:skype/models/user.dart';
 import 'package:skype/utils/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,6 +30,16 @@ class AuthMethods {
         await _userCollection.document(currentUser.uid).get();
 
     return User.fromMap(documentSnapshot.data);
+  }
+
+  Future<User> getUserById(id) async{
+    try {
+      DocumentSnapshot documentSnapshot = await _userCollection.document(id).get();
+      return User.fromMap(documentSnapshot.data);
+    } catch(e) {
+      print(e);
+      return null;
+    }
   }
 
   Future<FirebaseUser> signIn() async {
@@ -89,4 +100,11 @@ class AuthMethods {
     await _googleSignIn.signOut();
     return await _auth.signOut();
   }
+  
+  void setUserState({@required String userId, @required UserState userState}) {
+    int stateNum = Utils.stateToNum(userState);
+    _userCollection.document(userId).updateData({"state": stateNum});
+  }
+
+  Stream<DocumentSnapshot> getUserStream({@required String uid}) => _userCollection.document(uid).snapshots();
 }

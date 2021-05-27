@@ -8,40 +8,7 @@ class QuietBox extends StatelessWidget {
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 25.0),
-        child: Container(
-          color: UniversalVariables.separatorColor,
-          padding: EdgeInsets.symmetric( horizontal: 25.0, vertical: 35.0),
-          child: Column(
-            children: [
-              Text(
-                "contacts are listed here",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30.0
-                ),
-              ),
-              SizedBox(height: 25.0),
-              Text(
-                "Search for your friends and family to start calling or chatting with them",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  letterSpacing: 1.2,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 18.0
-                ),
-              ),
-              SizedBox(height: 25.0),
-              FlatButton(
-                color: UniversalVariables.lightBlueColor,
-                child: Text("Start Searching"),
-                onPressed: () => MaterialPageRoute(
-                  builder: (context) => SearchScreen(),
-                  ),
-              ),
-            ],
-          ),
-        ),
+        child: Container(),
       ),
     );
   }

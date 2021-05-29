@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:skype/enum/user_state.dart';
 // import 'package:image/image.dart' as Im;
 
@@ -47,5 +48,11 @@ class Utils {
       default:
         return UserState.Waiting;
     }
+  }
+
+  static String formatDate(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    var formatter = DateFormat('dd/MM/yy');
+    return formatter.format(dateTime);
   }
 }

@@ -6,6 +6,7 @@ import 'package:skype/enum/user_state.dart';
 import 'package:skype/provider/user_provider.dart';
 import 'package:skype/resources/auth_methods.dart';
 import 'package:skype/screens/callscreens/pickup/pickup_layout.dart';
+import 'package:skype/screens/logs/log_screen.dart';
 import 'package:skype/screens/pageviews/chat_list_screen.dart';
 import 'package:skype/utils/universal_variable.dart';
 
@@ -100,8 +101,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         backgroundColor: UniversalVariables.blackColor,
         body: PageView(
           children: <Widget>[
-            Container(child: ChatListScreen()),
-            Center(child: Text("Call Logs")),
+            ChatListScreen(),
+            LogScreen(),
             Center(child: Text("Contact Screen")),
           ],
           controller: pageController,

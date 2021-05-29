@@ -21,23 +21,14 @@ class Utils {
       source: source,
       maxWidth: 500,
       maxHeight: 500,
-      imageQuality: 85,
+      imageQuality: 100,
     );
     File selectedImage = File(file.path);
     return selectedImage;
-    //Use this if error pops up again.....
-    /*final ImagePicker _picker = ImagePicker();
-    PickedFile pickedImage = await _picker.getImage(
-      source: source,
-      maxWidth: 500,
-      maxHeight: 500,
-      imageQuality: 85,
-    );
-    File selectedImage = File(pickedImage.path);
-    return selectedImage;*/
   }
-  static int stateToNum(UserState userstate) {
-    switch(userstate) {
+
+  static int stateToNum(UserState userState) {
+    switch (userState) {
       case UserState.Offline:
         return 0;
       case UserState.Online:
@@ -47,8 +38,8 @@ class Utils {
     }
   }
 
-  static UserState numToState(int num) {
-    switch(num) {
+  static UserState numToState(int number) {
+    switch (number) {
       case 0:
         return UserState.Offline;
       case 1:
@@ -57,5 +48,4 @@ class Utils {
         return UserState.Waiting;
     }
   }
-
 }

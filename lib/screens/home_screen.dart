@@ -21,13 +21,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   UserProvider userProvider;
   AuthMethods _authMethods = AuthMethods();
 
-  @override
+   @override
   void initState() {
     super.initState();
 
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
       userProvider = Provider.of<UserProvider>(context, listen: false);
-      userProvider.refreshUser();
+      await userProvider.refreshUser();
+
       _authMethods.setUserState(
         userId: userProvider.getUser.uid,
         userState: UserState.Online,
@@ -46,31 +47,37 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecyclesState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     String currentUserId =
-        (userProvider != null && userProvider.getUser != null) ? userProvider.getUser.uid : "";
+        (userProvider != null && userProvider.getUser != null)
+            ? userProvider.getUser.uid
+            : "";
 
     super.didChangeAppLifecycleState(state);
 
     switch (state) {
       case AppLifecycleState.resumed:
         currentUserId != null
-            ? _authMethods.setUserState(userId: currentUserId, userState: UserState.Online)
-            : print("resumed state");
+            ? _authMethods.setUserState(
+                userId: currentUserId, userState: UserState.Online)
+            : print("resume state");
         break;
       case AppLifecycleState.inactive:
         currentUserId != null
-            ? _authMethods.setUserState(userId: currentUserId, userState: UserState.Offline)
+            ? _authMethods.setUserState(
+                userId: currentUserId, userState: UserState.Offline)
             : print("inactive state");
         break;
       case AppLifecycleState.paused:
         currentUserId != null
-            ? _authMethods.setUserState(userId: currentUserId, userState: UserState.Waiting)
+            ? _authMethods.setUserState(
+                userId: currentUserId, userState: UserState.Waiting)
             : print("paused state");
         break;
       case AppLifecycleState.detached:
         currentUserId != null
-            ? _authMethods.setUserState(userId: currentUserId, userState: UserState.Offline)
+            ? _authMethods.setUserState(
+                userId: currentUserId, userState: UserState.Offline)
             : print("detached state");
         break;
     }

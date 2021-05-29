@@ -100,11 +100,15 @@ class AuthMethods {
     await _googleSignIn.signOut();
     return await _auth.signOut();
   }
-  
+
   void setUserState({@required String userId, @required UserState userState}) {
     int stateNum = Utils.stateToNum(userState);
-    _userCollection.document(userId).updateData({"state": stateNum});
+
+    _userCollection.document(userId).updateData({
+      "state": stateNum,
+    });
   }
 
-  Stream<DocumentSnapshot> getUserStream({@required String uid}) => _userCollection.document(uid).snapshots();
+  Stream<DocumentSnapshot> getUserStream({@required String uid}) =>
+      _userCollection.document(uid).snapshots();
 }

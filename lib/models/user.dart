@@ -1,5 +1,6 @@
 class User {
-  String uid, name, email, username, status, state, profilePhoto;
+  String uid, name, email, username, status, profilePhoto;
+  int state;
 
   User({
     this.uid, this.name, this.email, this.username,

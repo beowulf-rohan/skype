@@ -8,7 +8,7 @@ For :<br />
     *local storage for call logs - Sqlite database.<br />
 
 
-<br /><br /> Worklog ::
+<br /><br /> Worklog ::<br />
 Day01 - Auth implementation via Firebase<br />
 Day04 - Home Screen UI implementation<br />
 Day06 - Search Screen UI and functionality implementation<br />

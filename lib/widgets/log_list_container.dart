@@ -117,14 +117,18 @@ class _LogListContainerState extends State<LogListContainer> {
               },
             );
           }
-          return Text(
-            "No call Logs",
-            style: TextStyle(fontSize: 15.0, color: Colors.white),
+          return Center(
+            child: Text(
+              "No call Logs",
+              style: TextStyle(fontSize: 15.0, color: Colors.white),
+            ),
           );
         }
-        return Text(
-          "No call Logs",
-          style: TextStyle(fontSize: 15.0, color: Colors.white),
+        return Center(
+          child: Text(
+            "No call Logs",
+            style: TextStyle(fontSize: 15.0, color: Colors.white),
+          ),
         );
       },
     );

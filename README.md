@@ -1,6 +1,6 @@
 Description :: 
-This project is built on Flutter SDK and it uses Firebase Authentication, Cloud Firestore, Firebase Storage, Agora SDK and Sqlite database in backend.
-For <br />
+This project is built on Flutter SDK and it uses Firebase Authentication, Cloud Firestore, Firebase Storage, Agora SDK and Sqlite database in backend.<br /><br />
+For :<br />
     *authenticating users -> Firebase Auth(Google sign-in).<br />
     *text messages -> Cloud Firestore.<br />
     *image messages -> Cloud Firestore and Firebase Storage.<br />
@@ -8,7 +8,7 @@ For <br />
     *local storage for call logs - Sqlite database.<br />
 
 
-Worklog ::
+<br /><br /> Worklog ::
 Day01 - Auth implementation via Firebase<br />
 Day04 - Home Screen UI implementation<br />
 Day06 - Search Screen UI and functionality implementation<br />
@@ -26,4 +26,4 @@ Day31 - Display chat methods in Chat Screens<br />
 Day34 - Online/Offline indiacator<br />
 Day35 - Logout Functionality and User Profile<br />
 Day36 - Sqlite functions added<br />
-Day38 -  Call logs displayed<br />
+Day38 - Call logs displayed<br />

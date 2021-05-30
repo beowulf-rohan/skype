@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:skype/enum/user_state.dart';
 import 'package:skype/provider/user_provider.dart';
 import 'package:skype/resources/auth_methods.dart';
+import 'package:skype/resources/local_db/repository/log_repositry.dart';
 import 'package:skype/screens/callscreens/pickup/pickup_layout.dart';
 import 'package:skype/screens/logs/log_screen.dart';
 import 'package:skype/screens/pageviews/chat_list_screen.dart';
@@ -22,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   UserProvider userProvider;
   AuthMethods _authMethods = AuthMethods();
 
-   @override
+  @override
   void initState() {
     super.initState();
 
@@ -33,6 +34,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       _authMethods.setUserState(
         userId: userProvider.getUser.uid,
         userState: UserState.Online,
+      );
+
+      LogRepository.init(
+        isSql: true,
+        dbName: userProvider.getUser.uid,
       );
     });
 
@@ -50,35 +56,29 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     String currentUserId =
-        (userProvider != null && userProvider.getUser != null)
-            ? userProvider.getUser.uid
-            : "";
+        (userProvider != null && userProvider.getUser != null) ? userProvider.getUser.uid : "";
 
     super.didChangeAppLifecycleState(state);
 
     switch (state) {
       case AppLifecycleState.resumed:
         currentUserId != null
-            ? _authMethods.setUserState(
-                userId: currentUserId, userState: UserState.Online)
+            ? _authMethods.setUserState(userId: currentUserId, userState: UserState.Online)
             : print("resume state");
         break;
       case AppLifecycleState.inactive:
         currentUserId != null
-            ? _authMethods.setUserState(
-                userId: currentUserId, userState: UserState.Offline)
+            ? _authMethods.setUserState(userId: currentUserId, userState: UserState.Offline)
             : print("inactive state");
         break;
       case AppLifecycleState.paused:
         currentUserId != null
-            ? _authMethods.setUserState(
-                userId: currentUserId, userState: UserState.Waiting)
+            ? _authMethods.setUserState(userId: currentUserId, userState: UserState.Waiting)
             : print("paused state");
         break;
       case AppLifecycleState.detached:
         currentUserId != null
-            ? _authMethods.setUserState(
-                userId: currentUserId, userState: UserState.Offline)
+            ? _authMethods.setUserState(userId: currentUserId, userState: UserState.Offline)
             : print("detached state");
         break;
     }

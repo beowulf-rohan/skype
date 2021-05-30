@@ -7,21 +7,24 @@ import 'package:path/path.dart';
 
 class SqliteMethods implements LogInterface {
   Database _db;
-  String databaseName = "LogDB";
+  String databaseName = "";
   String tableName = "Call_Logs";
   //columns
-  String id = "log_id", callerName = "caller_name", callerPic = "caller_pic";
-  String receiverName = "receiver_name", receiverPic = "receiver_pic";
-  String callStatus = "call_status", timestamp = "timestamp";
+  String id = 'log_id', callerName = 'caller_name', callerPic = 'caller_pic';
+  String receiverName = 'receiver_name', receiverPic = 'receiver_pic';
+  String callStatus = 'call_status', timestamp = 'timestamp';
 
   Future<Database> get db async {
-    if (db != null) {
+    if (_db != null) {
       return _db;
     }
-    print("db was null, created new db");
+    print("db was null, now awaiting it");
     _db = await init();
     return _db;
   }
+
+  @override
+  openDb(dbName) => (databaseName = dbName);
 
   @override
   init() async {
@@ -35,7 +38,6 @@ class SqliteMethods implements LogInterface {
     String createTableQuery =
         "CREATE TABLE $tableName ($id INTEGER PRIMARY KEY, $callerName TEXT, $callerPic TEXT, $receiverName TEXT, $receiverPic TEXT, $callStatus TEXT, $timestamp TEXT)";
     await db.execute(createTableQuery);
-    print("database created");
   }
 
   @override
@@ -45,36 +47,12 @@ class SqliteMethods implements LogInterface {
   }
 
   @override
-  deleteLogs(int logId) async {
-    var dbClient = await db;
-    return await dbClient.delete(tableName, where: '$id = ?', whereArgs: [logId]);
-  }
-
-  updateLogs(Log log) async {
-    var dbClient = await db;
-    await dbClient.update(
-      tableName,
-      log.toMap(log),
-      where: '$id = ?',
-      whereArgs: [log.logId],
-    );
-  }
-
-  @override
   Future<List<Log>> getLogs() async {
     try {
       var dbClient = await db;
       List<Map> maps = await dbClient.query(
         tableName,
-        columns: [
-          id,
-          callerName,
-          callerPic,
-          receiverName,
-          receiverPic,
-          callStatus,
-          timestamp,
-        ],
+        columns: [id, callerName, callerPic, receiverName, receiverPic, callStatus, timestamp],
       );
 
       List<Log> logList = [];
@@ -89,6 +67,22 @@ class SqliteMethods implements LogInterface {
       print(e);
       return null;
     }
+  }
+
+  updateLogs(Log log) async {
+    var dbClient = await db;
+    await dbClient.update(
+      tableName,
+      log.toMap(log),
+      where: '$id = ?',
+      whereArgs: [log.logId],
+    );
+  }
+
+  @override
+  deleteLogs(int logId) async {
+    var dbClient = await db;
+    return await dbClient.delete(tableName, where: '$id = ?', whereArgs: [logId+1]);
   }
 
   @override

@@ -55,4 +55,10 @@ class Utils {
     var formatter = DateFormat('dd/MM/yy');
     return formatter.format(dateTime);
   }
+
+  static String formatDateString(String date) {
+    DateTime dateTime = DateTime.parse(date);
+    var formatter = DateFormat('dd/MM/yy');
+    return formatter.format(dateTime);
+  }
 }
